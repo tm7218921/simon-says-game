@@ -1,283 +1,92 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+let gameSeq = [];
+let userSeq = [];
+let btns = ["orange", "red", "blue", "green"];
+let started = false;
+let level = 0;
+let h2 = document.querySelector("h2");
+let startBtn = document.querySelector("#startBtn");
 
-body {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-h1 {
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-h2 {
-    font-size: 1.5rem;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-/* Start Button Styling */
-.start-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    color: white;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 50px;
-    cursor: pointer;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    outline: none;
-    position: relative;
-    overflow: hidden;
-}
-
-.start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
-.start-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.start-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-}
-
-.start-btn:hover::before {
-    left: 100%;
-}
-
-.btn-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-}
-
-.lineone, .linetwo {
-    display: flex;
-    gap: 10px;
-}
-
-.btn {
-    height: 150px;
-    width: 150px;
-    border-radius: 20%;
-    border: 8px solid black;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
-    user-select: none;
-}
-
-.btn:hover {
-    transform: scale(1.05);
-}
-
-.btn:active {
-    transform: scale(0.95);
-}
-
-.orange {
-    background-color: #f99b45;         
-}
-
-.red {
-    background-color: #d95980;
-}
-
-.blue {
-    background-color: #819ff9;
-}
-
-.green {
-    background-color: #63aac0;
-}
-
-.flash {
-    background-color: white !important;
-    color: black !important;
-}
-
-.userflash {
-    background-color: #32cd32 !important;
-    color: white !important;
-}
-
-/* Tablet Responsive */
-@media screen and (max-width: 768px) {
-    h1 {
-        font-size: 2rem;
+// Start game with button click
+startBtn.addEventListener("click", function() {
+    if (!started) {
+        startGame();
     }
+});
+
+// Start game with keypress (existing functionality)
+document.addEventListener("keypress", function () {
+    if (!started) {
+        startGame();
+    }
+});
+
+function startGame() {
+    console.log("Game is Started");
+    started = true;
+    startBtn.style.display = "none"; // Hide start button
+    levelup();
+}
+
+function btnflash(btn) {
+    btn.classList.add("flash");
+    setTimeout(function () {
+        btn.classList.remove("flash");
+    }, 250);
+}
+
+function userflash(btn) {
+    btn.classList.add("userflash");
+    setTimeout(function () {
+        btn.classList.remove("userflash");
+    }, 250);
+}
+
+function levelup() {
+    userSeq = [];
+    level++;
+    h2.innerText = `Level ${level}`;
+    let randIdx = Math.floor(Math.random() * btns.length);
+    let randColor = btns[randIdx];
+    let randBtn = document.querySelector(`.${randColor}`);
+    gameSeq.push(randColor);
+    console.log(gameSeq);
+    btnflash(randBtn);
+}
+
+function chckAns(idx) {
+    if (userSeq[idx] === gameSeq[idx]) {
+        if (userSeq.length == gameSeq.length) {
+            setTimeout(levelup, 1000);
+        }
+    } else {
+        h2.innerHTML = `Game Over! Your score was <b>${level}</b> <br> Press Start Button to Play Again`;
+        document.querySelector("body").style.backgroundColor = "red";
+        setTimeout(function () {
+            document.querySelector("body").style.backgroundColor = "white";
+        }, 150);
+        reset();
+    }
+}
+
+function btnpress() {
+    if (!started) return; // Prevent clicks when game not started
     
-    h2 {
-        font-size: 1.2rem;
-        margin-bottom: 20px;
-    }
-    
-    .start-btn {
-        font-size: 1.1rem;
-        padding: 12px 25px;
-        margin-bottom: 25px;
-    }
-    
-    .btn {
-        height: 120px;
-        width: 120px;
-        border-radius: 15%;
-        border: 6px solid black;
-        font-size: 1.5rem;
-    }
-    
-    .lineone, .linetwo {
-        gap: 8px;
-    }
-    
-    .btn-container {
-        gap: 8px;
-    }
+    let btn = this;
+    userflash(btn);
+    let userColor = btn.getAttribute("id");
+    userSeq.push(userColor);
+    chckAns(userSeq.length - 1);
 }
 
-/* Mobile Responsive */
-@media screen and (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
-    h1 {
-        font-size: 1.5rem;
-        margin-bottom: 8px;
-    }
-    
-    h2 {
-        font-size: 1rem;
-        margin-bottom: 15px;
-        padding: 0 10px;
-    }
-    
-    .start-btn {
-        font-size: 1rem;
-        padding: 10px 20px;
-        margin-bottom: 20px;
-        border-radius: 25px;
-    }
-    
-    .btn {
-        height: 80px;
-        width: 80px;
-        border-radius: 10%;
-        border: 4px solid black;
-        font-size: 1.2rem;
-    }
-    
-    .lineone, .linetwo {
-        gap: 5px;
-    }
-    
-    .btn-container {
-        gap: 5px;
-    }
+let allbtns = document.querySelectorAll(".btn");
+for (let btn of allbtns) {
+    btn.addEventListener("click", btnpress);
 }
 
-/* Very Small Mobile Screens */
-@media screen and (max-width: 320px) {
-    .start-btn {
-        font-size: 0.9rem;
-        padding: 8px 16px;
-        margin-bottom: 15px;
-    }
-    
-    .btn {
-        height: 70px;
-        width: 70px;
-        font-size: 1rem;
-        border: 3px solid black;
-    }
-    
-    .lineone, .linetwo {
-        gap: 3px;
-    }
-    
-    .btn-container {
-        gap: 3px;
-    }
-    
-    h1 {
-        font-size: 1.3rem;
-    }
-    
-    h2 {
-        font-size: 0.9rem;
-    }
-}
-
-/* Landscape Mode for Mobile */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-    body {
-        padding: 5px;
-    }
-    
-    h1 {
-        font-size: 1.2rem;
-        margin-bottom: 5px;
-    }
-    
-    h2 {
-        font-size: 0.9rem;
-        margin-bottom: 10px;
-    }
-    
-    .start-btn {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-        margin-bottom: 10px;
-    }
-    
-    .btn {
-        height: 60px;
-        width: 60px;
-        font-size: 0.9rem;
-        border: 2px solid black;
-    }
-    
-    .btn-container {
-        gap: 3px;
-    }
-    
-    .lineone, .linetwo {
-        gap: 3px;
-    }
+function reset() {
+    started = false;
+    gameSeq = [];
+    userSeq = [];
+    level = 0;
+    startBtn.style.display = "block"; // Show start button again
 }
