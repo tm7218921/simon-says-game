@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simon Says Game</title>
-  <link rel="stylesheet" href="Style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Game</title>
+    <link rel="stylesheet" href="Style.css"/>
 </head>
 <body>
-  <h1>Simon Says Game</h1>
-  <h2>Press any key or tap Start to begin</h2>
-  <button id="startBtn">Start Game</button>
-
-  <div class="btn-container">
-    <div class="lineone">
-      <div class="btn red" id="red"></div>
-      <div class="btn orange" id="orange"></div>
+    <h1>Simon Says Game</h1>
+    <h2>Press the Start button or any key to begin</h2>
+    
+    <!-- Start Button -->
+    <button class="start-btn" id="startBtn">START GAME</button>
+    
+    <div class="btn-container">
+        <div class="lineone">
+            <div class="btn red" type="button" id="red">1</div>
+            <div class="btn orange" type="button" id="orange">2</div>
+        </div>
+        <div class="linetwo">
+            <div class="btn green" type="button" id="green">3</div>
+            <div class="btn blue" type="button" id="blue">4</div>
+        </div>
     </div>
-    <div class="linetwo">
-      <div class="btn green" id="green"></div>
-      <div class="btn blue" id="blue"></div>
-    </div>
-  </div>
-
-  <script src="App.js"></script>
+    <script src="App.js"></script>        
 </body>
 </html>
